@@ -44,6 +44,26 @@ def SomePost():
 	fn = p["author"]["last_name"]
 	return fn
 
+app.config.from_object('config')
+
+path = os.path.join(app.config['FILES_FOLDER'],"gini.csv")
+f = open(path)
+
+r = csv.reader(f)
+d = list(r)
+
+for data in d:
+    print(data)
+
+for file in os.listdir(app.config['FILES_FOLDER']):
+    filename = os.fsdecode(file)
+    path = os.path.join(app.config['FILES_FOLDER'],filename)
+    f = open(path)
+    r = csv.reader(f)
+    d = list(r)
+    for data in d:
+        print(data)
+
 if __name__ =="__main__":
     app.run(debug=True, port=80,host='0.0.0.0')
 	

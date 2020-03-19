@@ -1,6 +1,8 @@
 from flask import Flask, render_template,redirect,url_for
 from mongoengine import *
 app = Flask(__name__)
+app.config.from_object('config')
+
 connect('web3')
 
 @app.route('/') 
@@ -44,25 +46,26 @@ def SomePost():
 	fn = p["author"]["last_name"]
 	return fn
 
-app.config.from_object('config')
-
-path = os.path.join(app.config['FILES_FOLDER'],"gini.csv")
-f = open(path)
-
-r = csv.reader(f)
-d = list(r)
-
-for data in d:
-    print(data)
-
-for file in os.listdir(app.config['FILES_FOLDER']):
-    filename = os.fsdecode(file)
-    path = os.path.join(app.config['FILES_FOLDER'],filename)
+@app.route('/csv')
+def AFile():
+    path = os.path.join(app.config['FILES_FOLDER'],"gini.csv")
     f = open(path)
+
     r = csv.reader(f)
     d = list(r)
+
     for data in d:
         print(data)
+
+    for file in os.listdir(app.config['FILES_FOLDER']):
+        filename = os.fsdecode(file)
+        path = os.path.join(app.config['FILES_FOLDER'],filename)
+        f = open(path)
+        r = csv.reader(f)
+        d = list(r)
+        for data in d:
+            print(data)
+    return "done"
 
 if __name__ =="__main__":
     app.run(debug=True, port=80,host='0.0.0.0')
